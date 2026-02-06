@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Looney Gov - Political Video Remix</title>
+    <meta name="description" content="Create hilarious political video remixes with Looney Tunes sounds">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Start Screen (White background + Enter Button) -->
+    <div id="start-screen">
+        <button id="enter-btn">
+            <img src="enter_buttom.png" alt="Enter">
+        </button>
+    </div>
+
+    <!-- Global Background -->
+    <img src="backgrond.png" alt="" class="global-background">
+
+    <!-- Opening Animation Screen -->
+    <div id="opening-screen" class="screen active">
+        <div class="intro-container">
+            <video id="intro-video" autoplay muted playsinline>
+                <source src="./intro.webm" type="video/webm">
+                <source src="./intro.mov" type="video/quicktime">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <!-- Main Application Screen -->
+    <div id="main-screen" class="screen">
+        <div class="app-container">
+            <!-- Left Column: Grid + Politicians -->
+            <div class="column left-column">
+                <!-- Grid Removed -->
+
+                <div class="politicians-container left-politicians">
+                    <div class="politician-slot" data-politician="miri" data-grid-target="left-1-2">
+                        <img src="miri.png" alt="Miri Regev" class="politician-portrait">
+                    </div>
+                    <div class="politician-slot" data-politician="tali" data-grid-target="left-2-1">
+                        <img src="tali.png" alt="Tali Gottlieb" class="politician-portrait">
+                    </div>
+                    <div class="politician-slot" data-politician="strok" data-grid-target="left-3-2">
+                        <img src="strok.png" alt="May Golan" class="politician-portrait">
+                    </div>
+                    <div class="politician-slot" data-politician="deri" data-grid-target="left-4-1">
+                        <img src="deri.png" alt="Aryeh Deri" class="politician-portrait">
+                    </div>
+                    <div class="politician-slot" data-politician="levin" data-grid-target="left-5-2">
+                        <img src="levin.png" alt="Yariv Levin" class="politician-portrait">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Column: Controls + Video -->
+            <div class="column center-column">
+
+                <div class="center-area">
+                    <img src="loony gov_logotype.png" alt="Looney Gov" class="main-logo">
+                    <div class="video-container">
+                        <div class="animated-background"></div>
+                        <video id="politician-video" loop muted playsinline class="politician-video"
+                            crossorigin="anonymous">
+                            <source src="" type="video/quicktime">
+                        </video>
+                        <div class="placeholder-text"></div>
+                    </div>
+                </div>
+
+                <div class="bottom-section">
+                    <button id="remix-btn" class="control-btn remix-btn">
+                        <img src="remix%20buttom.png" alt="REMIX">
+                    </button>
+                    <button id="sound-switch-btn" class="control-btn sound-switch-btn">
+                        <img src="1_button.png" id="sound-switch-img" alt="SWITCH SOUND">
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column: Grid + Politicians -->
+            <div class="column right-column">
+                <!-- Grid Removed -->
+
+                <div class="politicians-container right-politicians">
+                    <div class="politician-slot" data-politician="katz" data-grid-target="right-1-1">
+                        <img src="katz.png" alt="Israel Katz" class="politician-portrait">
+                    </div>
+                    <div class="politician-slot" data-politician="bengvir" data-grid-target="right-2-2">
+                        <img src="bengvir.png" alt="Itamar Ben Gvir" class="politician-portrait">
+                    </div>
+                    <div class="politician-slot" data-politician="bibi" data-grid-target="right-3-1">
+                        <img src="bibi.png" alt="Benjamin Netanyahu" class="politician-portrait">
+                    </div>
+                    <div class="politician-slot" data-politician="smot" data-grid-target="right-4-2">
+                        <img src="smot.png" alt="Bezalel Smotrich" class="politician-portrait">
+                    </div>
+                    <div class="politician-slot" data-politician="miki" data-grid-target="right-5-1">
+                        <img src="miki.png" alt="Miki Zohar" class="politician-portrait">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Element (Hidden) -->
+    <audio id="looney-audio" preload="auto" crossorigin="anonymous"></audio>
+
+    <!-- Export Modal -->
+    <!-- Export Modal Removed -->
+
+
+
+    <script src="app.js"></script>
+</body>
+
+</html>

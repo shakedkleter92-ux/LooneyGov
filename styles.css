@@ -1,0 +1,740 @@
+/* ==========================================================================
+   1. VARIABLES & RESET
+   ========================================================================== */
+:root {
+    /* -- Colors -- */
+    --primary-blue: #4A9FE8;
+    --dark-blue: #2B5A8E;
+    --light-blue: #87CEEB;
+    --accent-blue: #1E90FF;
+    --white: #FFFFFF;
+    --black: #000000;
+    --gray-dark: #424242;
+
+    /* -- Typography -- */
+    --font-primary: 'Outfit', sans-serif;
+
+    /* -- Effects -- */
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.4s ease;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: #ffffff;
+    min-height: 100vh;
+    overflow: hidden;
+    /* Prevent scrollbars during scaling */
+    color: var(--gray-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: url('mouse-pointer.png'), auto;
+    /* Custom Default Cursor */
+}
+
+/* Custom Pointer Cursor for interactive elements */
+button,
+.politician-slot,
+.control-btn,
+#enter-btn,
+a {
+    cursor: url('mouse-pointer-select.png') 0 0, pointer !important;
+}
+
+/* ==========================================================================
+   2. APP CONTAINER & LAYOUT (3-Column System)
+   ========================================================================== */
+#main-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    transform-origin: center;
+    opacity: 0;
+    /* Hidden initially, revealed by JS */
+    transition: opacity 1s ease-in;
+    /* Smooth fade in */
+}
+
+.app-container {
+    width: 1920px;
+    height: 1080px;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    transform-origin: center center;
+    /* This container holds the 3 columns */
+}
+
+.column {
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Side Columns: Fixed Width matching the Grid (216px * 2 = 432px) */
+.left-column,
+.right-column {
+    flex: 0 0 432px;
+    width: 432px;
+    min-width: 432px;
+    z-index: 10;
+    pointer-events: none;
+    /* Let clicks pass through containers */
+}
+
+/* Center Column: Flexible Space */
+.center-column {
+    flex: 1;
+    min-width: 1056px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    z-index: 20;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   3. GRID SYSTEM
+   ========================================================================== */
+/* Grid Styles Removed */
+
+/* ==========================================================================
+   4. POLITICIAN SLOTS & PORTRAITS
+   ========================================================================== */
+.politicians-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* Let clicks pass through to grid if needed */
+    z-index: 50;
+    /* Above grid */
+}
+
+.politician-slot {
+    position: absolute;
+    width: 216px;
+    height: 216px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    pointer-events: auto;
+    /* Re-enable clicks */
+    z-index: 100;
+    overflow: visible;
+    transition: transform var(--transition-fast);
+}
+
+.politician-portrait {
+    width: auto;
+    height: 95%;
+    /* Reduced from 115% */
+    /* Default Size */
+    max-width: 130%;
+    object-fit: contain;
+    filter: drop-shadow(var(--shadow-sm));
+    transition: transform var(--transition-fast);
+    animation: float 4s ease-in-out infinite;
+    /* Floating animation */
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px) scale(1);
+    }
+
+    50% {
+        transform: translateY(-15px) scale(1.40);
+        /* Float up and grow even MORE */
+    }
+
+    100% {
+        transform: translateY(0px) scale(1);
+    }
+}
+
+/* Staggered Animations for Organic Feel */
+.politician-slot:nth-child(1) .politician-portrait {
+    animation-delay: 0s;
+}
+
+.politician-slot:nth-child(2) .politician-portrait {
+    animation-delay: -2s;
+}
+
+/* Opposite phase */
+.politician-slot:nth-child(3) .politician-portrait {
+    animation-delay: -1s;
+}
+
+.politician-slot:nth-child(4) .politician-portrait {
+    animation-delay: -3s;
+}
+
+.politician-slot:nth-child(5) .politician-portrait {
+    animation-delay: -0.5s;
+}
+
+/* Further offset for right column */
+.right-politicians .politician-slot:nth-child(1) .politician-portrait {
+    animation-delay: -1.5s;
+}
+
+.right-politicians .politician-slot:nth-child(2) .politician-portrait {
+    animation-delay: -3.5s;
+}
+
+.right-politicians .politician-slot:nth-child(3) .politician-portrait {
+    animation-delay: -0.8s;
+}
+
+.right-politicians .politician-slot:nth-child(4) .politician-portrait {
+    animation-delay: -2.5s;
+}
+
+.right-politicians .politician-slot:nth-child(5) .politician-portrait {
+    animation-delay: -1.2s;
+}
+
+/* Special Sizing for Specific Politicians */
+.politician-slot[data-politician="deri"] .politician-portrait,
+.politician-slot[data-politician="bengvir"] .politician-portrait {
+    height: 100%;
+    /* Reduced from 115% */
+    max-width: 150%;
+}
+
+/* Extra Large for Miri and Tali (+20px) */
+.politician-slot[data-politician="miri"] .politician-portrait,
+.politician-slot[data-politician="tali"] .politician-portrait {
+    height: 110%;
+    max-width: 160%;
+}
+
+/* Hover & Active States */
+.politician-slot:hover {
+    transform: scale(1.15);
+    z-index: 200;
+}
+
+.politician-slot:hover .politician-portrait {
+    filter: drop-shadow(0 0 15px rgba(74, 159, 232, 0.8)) !important;
+}
+
+.politician-slot.selected .politician-portrait {
+    width: 195px;
+    height: 195px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    animation: pulse 2s infinite !important;
+    /* Override float */
+    transform: none;
+    /* Reset transform to avoid float conflict */
+}
+
+/* Enlarge specific portraits */
+.politician-slot[data-politician="katz"] .politician-portrait,
+.politician-slot[data-politician="bibi"] .politician-portrait,
+.politician-slot[data-politician="smot"] .politician-portrait,
+.politician-slot[data-politician="miki"] .politician-portrait,
+.politician-slot[data-politician="strok"] .politician-portrait,
+.politician-slot[data-politician="levin"] .politician-portrait {
+    width: 230px;
+    height: 230px;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px rgba(74, 159, 232, 0.5));
+    }
+
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 20px rgba(74, 159, 232, 1));
+    }
+}
+
+/* --- Positioning Logic (RTL Adjusted) --- */
+/* RTL Note: In RTL Flex/Grid containers, the "first" column is often on the right.
+   We swap 0px and 216px to align with the visual white squares. */
+
+/* Left Column Positions */
+.politician-slot[data-grid-target="left-1-2"] {
+    top: 0px;
+    left: 0px;
+    /* Swapped from 216 */
+}
+
+.politician-slot[data-grid-target="left-2-1"] {
+    top: 216px;
+    left: 216px;
+    /* Swapped from 0 */
+}
+
+.politician-slot[data-grid-target="left-3-2"] {
+    top: 432px;
+    left: 0px;
+    /* Swapped from 216 */
+}
+
+.politician-slot[data-grid-target="left-4-1"] {
+    top: 648px;
+    left: 216px;
+    /* Swapped from 0 */
+}
+
+.politician-slot[data-grid-target="left-5-2"] {
+    top: 864px;
+    left: 0px;
+    /* Swapped from 216 */
+}
+
+/* Right Column Positions */
+.politician-slot[data-grid-target="right-1-1"] {
+    top: 0px;
+    right: 0px;
+    /* Swapped from 216 */
+}
+
+.politician-slot[data-grid-target="right-2-2"] {
+    top: 216px;
+    right: 216px;
+    /* Swapped from 0 */
+}
+
+.politician-slot[data-grid-target="right-3-1"] {
+    top: 432px;
+    right: 0px;
+    /* Swapped from 216 */
+}
+
+.politician-slot[data-grid-target="right-4-2"] {
+    top: 648px;
+    right: 216px;
+    /* Swapped from 0 */
+}
+
+.politician-slot[data-grid-target="right-5-1"] {
+    top: 864px;
+    right: 0px;
+    /* Swapped from 216 */
+}
+
+
+/* ==========================================================================
+   5. CENTER CONSOLE (Video & Buttons)
+   ========================================================================== */
+.top-section,
+.bottom-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    margin: 20px 0;
+    /* Restored margin for spacing */
+    pointer-events: auto;
+    z-index: 600 !important;
+    /* Higher than video (500) and grid */
+}
+
+/* Position bottom-section below the animation */
+.bottom-section {
+    position: absolute;
+    bottom: 165px;
+    /* Moved down 5px more */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    flex-direction: column;
+    /* Stack buttons vertically */
+    gap: 15px;
+    /* Space between buttons */
+}
+
+.control-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform var(--transition-medium);
+}
+
+.control-btn img {
+    height: 50px;
+    /* Reduced from 60px */
+    width: auto;
+    filter: drop-shadow(var(--shadow-md));
+}
+
+/* Specific styling for the new sound button image to match size */
+#sound-switch-img {
+    height: 60px;
+    /* Force explicit height */
+    width: auto;
+}
+
+.control-btn:hover:not(:disabled) {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 15px rgba(74, 159, 232, 0.8));
+}
+
+.control-btn:active:not(:disabled) {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 25px rgba(74, 159, 232, 1));
+}
+
+.control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Video Area */
+.center-area {
+    width: 1050px;
+    height: 1050px;
+    position: absolute;
+    /* Take out of flow to overlap */
+    top: calc(48% + 30px);
+    /* Moved UP from 50% to fix visual center */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    pointer-events: none;
+    /* Let clicks pass through to the grid */
+}
+
+/* Re-enable clicks for interactions inside center area */
+.center-area>* {
+    pointer-events: auto;
+}
+
+.video-container {
+    width: 100%;
+    height: 100%;
+    background-image: url('animation_backgrond.png');
+    /* Flat path */
+    background-size: 85%;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+/* Politician Video - Back to Normal for Opaque Face */
+/* Politician Video - Back to Normal for Opaque Face */
+/* Politician Video - Resized to fit inner circle */
+.politician-video {
+    position: absolute;
+    top: 50%;
+    /* Moved up slightly to align with background center */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    /* Reduced from 550px to avoid button overlap */
+    height: 500px;
+    object-fit: contain;
+    /* Changed from cover to contain to ensure full face is visible */
+    /* border-radius removed to show full animation */
+    opacity: 0;
+    transition: opacity var(--transition-medium), width var(--transition-medium), height var(--transition-medium);
+    z-index: 500 !important;
+    /* Force Highest Z-Index */
+    background-color: transparent !important;
+    /* Ensure no background color from CSS */
+    background: transparent !important;
+    /* Safari-specific fix */
+    outline: none !important;
+    /* Remove any outline */
+    display: block !important;
+    /* Ensure it is not hidden */
+}
+
+/* --- Specific Adjustments Per Politician --- */
+
+/* 1. Bibi - Move UP significanty (ears can overlap logo) */
+.politician-video.bibi {
+    width: 620px;
+    height: 620px;
+    top: 42% !important;
+}
+
+/* 2. Ben Gvir - Move UP and Enlarge */
+.politician-video.bengvir {
+    width: 620px;
+    height: 620px;
+    top: 45% !important;
+}
+
+/* 3. Smotrich - Enlarge */
+.politician-video.smot {
+    width: 580px;
+    height: 580px;
+    top: 48% !important;
+}
+
+/* 4. Katz - Move UP */
+.politician-video.katz {
+    width: 550px;
+    height: 550px;
+    top: 45% !important;
+}
+
+/* 5. Deri - Enlarge slightly */
+.politician-video.deri {
+    width: 550px;
+    height: 550px;
+}
+
+/* 6. Strok - Enlarge slightly */
+.politician-video.strok {
+    width: 550px;
+    height: 550px;
+}
+
+/* 7. Tali & Miri - Enlarge */
+.politician-video.tali,
+.politician-video.miri {
+    width: 600px;
+    height: 600px;
+}
+
+/* Unified Playing State for Video and Logo */
+.center-area.playing .politician-video {
+    animation: videoPulse 2s infinite;
+    opacity: 1;
+}
+
+.center-area.playing .main-logo {
+    animation: logoPulse 2s infinite;
+}
+
+/* Hover over playing state - Maintain specific transforms */
+.center-area.playing:hover .politician-video {
+    filter: drop-shadow(0 0 30px rgba(74, 159, 232, 1)) !important;
+    animation: none;
+    transform: translate(-50%, -50%) scale(1.02);
+}
+
+.center-area.playing:hover .main-logo {
+    filter: drop-shadow(0 0 30px rgba(74, 159, 232, 1)) !important;
+    animation: none;
+    transform: translateX(-50%) scale(1.02);
+}
+
+@keyframes videoPulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        filter: drop-shadow(0 0 20px rgba(74, 159, 232, 0.5));
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.02);
+        filter: drop-shadow(0 0 40px rgba(74, 159, 232, 0.9));
+    }
+}
+
+@keyframes logoPulse {
+
+    0%,
+    100% {
+        transform: translateX(-50%) scale(1);
+        filter: drop-shadow(0 0 20px rgba(74, 159, 232, 0.5));
+    }
+
+    50% {
+        transform: translateX(-50%) scale(1.08);
+        /* Milder pulse */
+        filter: drop-shadow(0 0 40px rgba(74, 159, 232, 0.9));
+    }
+}
+
+.main-logo {
+    position: absolute;
+    top: calc(15% - 100px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px !important;
+    height: auto;
+    z-index: 200;
+    pointer-events: none;
+    filter: drop-shadow(var(--shadow-md));
+    transition: all var(--transition-medium);
+    animation: logoPulse 6s ease-in-out infinite;
+    /* Continuous pulse */
+}
+
+.placeholder-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    pointer-events: none;
+    transition: opacity var(--transition-medium);
+}
+
+.placeholder-text.hidden {
+    opacity: 0;
+}
+
+/* ==========================================================================
+   6. INTRO OVERLAY
+   ========================================================================== */
+#opening-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    transition: opacity 0.5s ease-out;
+}
+
+#opening-screen.active {
+    pointer-events: auto;
+}
+
+#opening-screen.fade-out {
+    opacity: 0;
+}
+
+#intro-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.1);
+    /* Scale up to cover edges */
+    mix-blend-mode: multiply;
+    /* Reverting to multiply */
+    background: transparent;
+}
+
+.intro-container {
+    position: absolute;
+    top: 0;
+    left: 15px;
+    /* Shift right by 15px */
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    /* Removed background-color: white to fix grey look */
+}
+
+
+
+/* ==========================================================================
+   8. RESPONSIVE SCALING (Maintain Aspect Ratio)
+   ========================================================================== */
+/* Scaling is now handled via JavaScript in app.js for smooth continuous resizing */
+
+/* ==========================================================================
+   START SCREEN (Enter Button)
+   ========================================================================== */
+#start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20000;
+    /* Higher than everything */
+    transition: opacity 0.5s ease;
+}
+
+#start-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#enter-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+#enter-btn img {
+    height: 60px;
+    /* Matched to main UI buttons */
+    width: auto;
+}
+
+#enter-btn:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 15px rgba(74, 159, 232, 0.8));
+}
+
+#enter-btn:active {
+    transform: scale(0.95);
+    filter: drop-shadow(0 0 25px rgba(74, 159, 232, 1));
+}
+
+
+
+/* ==========================================================================
+   10. GLOBAL BACKGROUND
+   ========================================================================== */
+/* Background Pulse Animation */
+@keyframes backgroundPulse {
+
+    0%,
+    100% {
+        transform: scale(1.05);
+        /* Start Slightly zoom in */
+    }
+
+    50% {
+        transform: scale(1);
+        /* Shrink to normal size */
+    }
+}
+
+.global-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 0;
+    /* Behind everything */
+    animation: backgroundPulse 6s ease-in-out infinite;
+}
